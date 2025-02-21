@@ -9,4 +9,8 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    port: 7850,
+    allowedHosts: ["ke3940hm6fbel3j4mo4ka301.projectanka.com"]
+  }
 });
