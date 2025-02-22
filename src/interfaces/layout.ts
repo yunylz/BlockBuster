@@ -11,7 +11,8 @@ export type IMenuItem =
   | "texts"
   | "captions"
   | "blocks"
-  | "config";
+  | "config"
+  | "tapes";
 export interface ILayoutState {
   cropTarget: ITrackItem | null;
   activeMenuItem: IMenuItem | null;

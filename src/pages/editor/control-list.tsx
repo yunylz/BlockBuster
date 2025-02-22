@@ -92,8 +92,9 @@ const ImageMenuList = ({
   activeToolboxItem: string;
 }) => {
   return (
+    // TODO: mashup bg image options
     <div className="flex flex-col items-center">
-      <BasicMenuListItem
+      {/* <BasicMenuListItem
         activeToolboxItem={activeToolboxItem}
         openToolboxItem={openToolboxItem}
         type={type}
@@ -101,7 +102,7 @@ const ImageMenuList = ({
       <AnimationMenuListItem
         activeToolboxItem={activeToolboxItem}
         openToolboxItem={openToolboxItem}
-      />
+      /> */}
     </div>
   );
 };
@@ -151,10 +152,11 @@ const VideoMenuList = ({
         openToolboxItem={openToolboxItem}
         type={type}
       />
-      <AnimationMenuListItem
+      {/* TODO: disable anims for videos (blocks) */}
+      {/* <AnimationMenuListItem
         activeToolboxItem={activeToolboxItem}
         openToolboxItem={openToolboxItem}
-      />
+      /> */}
     </div>
   );
 };

@@ -2,7 +2,7 @@
 import { v4 } from "uuid";
 
 import { BeatOptions, BeatResult, Block } from "@/interfaces/assets";
-import { MusicTrack, Tape, BlockReplacements, BlockDescriptor, BlockFlowTemplate } from "@/interfaces/uaf";
+import { MusicTrack, Tape, BlockReplacements, BlockDescriptor, BlockFlowTemplate, ActorTemplate, MusicTrackComponent } from "@/interfaces/uaf";
 
 import useStore from "@/pages/editor/store/use-store";
 
@@ -105,3 +105,43 @@ export function generateBeats({ bpm, songLength }: BeatOptions): BeatResult {
       songDuration: (beats.length - 1) * msPerBeat // actual duration covered by beats
   };
 }
+
+export function exportMusicTrack(projectStore: ProjectState) {
+  const { mapName, beats } = projectStore;
+
+  const markers = beats.map(b => b * 48);
+
+  const musicTrackComponent: MusicTrackComponent = {
+      __class: "MusicTrackComponent_Template",
+      trackData: {
+          __class: "MusicTrackData",
+          structure: {
+              __class: "MusicTrackStructure",
+              markers: markers,
+              sections: [],
+              startBeat: 0,
+              endBeat: markers[markers.length] || 0,
+              videoStartTime: 0,
+              previewEntry: 0,
+              previewLoopStart: 30,
+              previewLoopEnd: 60,
+              volume: 1.0
+          },
+          path: `world/maps/${mapName.toLowerCase()}/audio/${mapName.toLowerCase()}.wav`,
+          url: `jmcs://jd-contents/${mapName.toLowerCase()}/${mapName.toLowerCase()}.ogg`
+      }
+  };
+
+  const musicTrack : MusicTrack = {
+    __class: "Actor_Template",
+    WIP: 0,
+    LOWUPDATE: 0,
+    UPDATE_LAYER: 0,
+    PROCEDURAL: 0,
+    STARTPAUSED: 0,
+    FORCEISENVIRONMENT: 0,
+    COMPONENTS: [musicTrackComponent]
+  };
+
+  return musicTrack;
+};

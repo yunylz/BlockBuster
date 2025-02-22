@@ -2,13 +2,14 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { IAudio, ITrackItem } from "@designcombo/types";
 import Volume from "./common/volume";
 import Speed from "./common/speed";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { dispatch } from "@designcombo/events";
 import { EDIT_OBJECT, LAYER_REPLACE } from "@designcombo/state";
 import { Button } from "@/components/ui/button";
 
 const BasicAudio = ({ trackItem }: { trackItem: ITrackItem & IAudio }) => {
   const [properties, setProperties] = useState(trackItem);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleChangeVolume = (v: number) => {
     dispatch(EDIT_OBJECT, {
@@ -20,16 +21,13 @@ const BasicAudio = ({ trackItem }: { trackItem: ITrackItem & IAudio }) => {
         },
       },
     });
-
-    setProperties((prev) => {
-      return {
-        ...prev,
-        details: {
-          ...prev.details,
-          volume: v,
-        },
-      };
-    });
+    setProperties((prev) => ({
+      ...prev,
+      details: {
+        ...prev.details,
+        volume: v,
+      },
+    }));
   };
 
   const handleChangeSpeed = (v: number) => {
@@ -40,25 +38,55 @@ const BasicAudio = ({ trackItem }: { trackItem: ITrackItem & IAudio }) => {
         },
       },
     });
+    setProperties((prev) => ({
+      ...prev,
+      playbackRate: v,
+    }));
+  };
 
-    setProperties((prev) => {
-      return {
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('audio/')) {
+        alert("Please select an audio file.");
+        return;
+      }
+
+      // Create a URL for the selected file
+      const audioUrl = URL.createObjectURL(file);
+
+      dispatch(LAYER_REPLACE, {
+        payload: {
+          [trackItem.id]: {
+            details: {
+              src: audioUrl,
+            },
+          },
+        },
+      });
+
+      // Update local state
+      setProperties((prev) => ({
         ...prev,
-        playbackRate: v,
-      };
-    });
+        details: {
+          ...prev.details,
+          src: audioUrl,
+        },
+      }));
+
+      // Clear the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+
+      console.log("audio replaced")
+    }
   };
 
   const handleReplace = () => {
-    dispatch(LAYER_REPLACE, {
-      payload: {
-        [trackItem.id]: {
-          details: {
-            src: "https://ik.imagekit.io/pablituuu/like_a_player.mp3?updatedAt=1722278521488",
-          },
-        },
-      },
-    });
+    // Trigger file input click
+    fileInputRef.current?.click();
   };
 
   return (
@@ -67,10 +95,17 @@ const BasicAudio = ({ trackItem }: { trackItem: ITrackItem & IAudio }) => {
         Audio
       </div>
       <ScrollArea className="h-full">
-        <Button onClick={handleReplace} variant={"secondary"} size={"lg"}>
-          Replace
-        </Button>
-        <div className="flex flex-col gap-2 px-4">
+        <div className="px-4 space-y-2">
+          <input 
+            type="file" 
+            ref={fileInputRef}
+            accept="audio/*"
+            className="hidden" 
+            onChange={handleFileSelect}
+          />
+          <Button onClick={handleReplace} variant="secondary" size="lg" className="w-full">
+            Replace Audio
+          </Button>
           <Volume
             onChange={(v: number) => handleChangeVolume(v)}
             value={properties.details.volume!}

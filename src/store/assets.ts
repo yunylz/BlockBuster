@@ -5,6 +5,7 @@ interface Asset {
   name: string;
   src: string;
   author: string;
+  metadata: object;
 }
 
 interface Block {
@@ -18,6 +19,8 @@ interface IAssetStore {
   blocks: Block[];
   setAudios: (audio: Asset) => void;
   setBlocks: (block: Block) => void;
+  clearAudios: () => void;
+  clearBlocks: () => void;
 }
 
 const useAssetStore = create<IAssetStore>((set) => ({
@@ -25,6 +28,8 @@ const useAssetStore = create<IAssetStore>((set) => ({
   blocks: [],
   setAudios: (audio) => set((state) => ({ audios: [...state.audios, audio] })),
   setBlocks: (block) => set((state) => ({ blocks: [...state.blocks, block] })),
+  clearAudios: () => set({ audios: [] }),
+  clearBlocks: () => set({ blocks: [] })
 }));
 
 export default useAssetStore;

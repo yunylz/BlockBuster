@@ -78,18 +78,18 @@ export default function MenuList() {
       {/* Background */}
       <Button
         onClick={() => {
-          setActiveMenuItem("images");
+          setActiveMenuItem("tapes");
           setShowMenuItem(true);
         }}
         className={cn(
-          showMenuItem && activeMenuItem === "images"
+          showMenuItem && activeMenuItem === "tapes"
             ? "bg-secondary"
             : "text-muted-foreground",
         )}
         variant={"ghost"}
         size={"icon"}
       >
-        <Icons.diamond width={20} />
+        <Icons.tape width={20} />
       </Button>
       {/* Config */}
       <Button

@@ -1,3 +1,4 @@
+import useStore from "@/pages/editor/store/use-store";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -22,3 +23,18 @@ export function formatBytes(
     sizeType === "accurate" ? accurateSizes[i] ?? "Bytest" : sizes[i] ?? "Bytes"
   }`;
 }
+
+export function isTracksEmpty(trackStore: ReturnType<typeof useStore>) { 
+  const {
+    tracks,
+    // trackItemIds,
+    trackItemsMap,
+    // trackItemDetailsMap,
+    // transitionsMap,
+    // transitionIds,
+    // fps,
+  } = trackStore;
+
+  if (tracks.length == 0 || trackItemsMap.length == 0) return true
+  else return false
+};

@@ -45,12 +45,20 @@ import {
   Diamond,
   MinusCircle,
   PlusCircle,
-  CheckCircle
+  CheckCircle,
+  CassetteTape,
+  Save,
+  FolderOpen
 } from "lucide-react";
 
 export type Icon = LucideIcon;
 
 export const Icons = {
+  file: File,
+  folderOpen: FolderOpen,
+  save: Save,
+  folder: FolderClosed,
+  tape: CassetteTape,
   minusCircle: MinusCircle,
   plusCircle: PlusCircle,
   checkCircle: CheckCircle,
@@ -70,7 +78,6 @@ export const Icons = {
   copy: Copy,
   dashboard: LayoutPanelLeft,
   ellipsis: MoreVertical,
-  folder: FolderClosed,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

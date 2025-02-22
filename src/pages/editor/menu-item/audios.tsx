@@ -52,6 +52,7 @@ export const Audios = () => {
   const hasAudioTrack = store.tracks.some((track: { type: string }) => track.type === "audio");
 
   const filteredAudios = useMemo(() => {
+    console.log(audios)
     const query = searchQuery.toLowerCase();
     return audios.filter(
       (audio) =>
@@ -64,7 +65,12 @@ export const Audios = () => {
     if (hasAudioTrack) {
       alert('An audio file has already been added to the timeline');
       return;
-    }
+    };
+
+    if (bpm === 0) {
+      alert('You must set the BPM before adding an audio to the timeline.');
+      return;
+    };
 
     try {
       const duration = await getAudioDuration(src);
@@ -118,13 +124,16 @@ export const Audios = () => {
 
     setUploadState('uploading');
     try {
-      const objectURL = URL.createObjectURL(file);
       if (file.type.startsWith("audio/")) {
+        const objectURL = URL.createObjectURL(file);
         setAudios({
           id: Date.now(),
           name: file.name,
           src: objectURL,
           author: "",
+          metadata: {
+            audioPath: objectURL // Store the original path
+          }
         });
       }
       setUploadState('success');

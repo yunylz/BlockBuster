@@ -172,7 +172,8 @@ const BasicVideo = ({ trackItem }: { trackItem: ITrackItem & IVideo }) => {
       </div>
       <ScrollArea className="h-full">
         <div className="flex flex-col gap-2 px-4">
-          <Button
+          {/* TODO: crop doesnt work, and is useless */}
+          {/* <Button
             variant={"secondary"}
             size={"icon"}
             onClick={() => {
@@ -181,18 +182,21 @@ const BasicVideo = ({ trackItem }: { trackItem: ITrackItem & IVideo }) => {
             }}
           >
             <Crop size={18} />
-          </Button>
+          </Button> */}
 
-          <AspectRatio />
-          <Volume
+          {/* <AspectRatio /> */}
+          {/* TODO: deleted this because blocks dont need it */}
+          {/* <Volume
             onChange={(v: number) => handleChangeVolume(v)}
             value={properties.details.volume!}
-          />
+          /> */}
+          {/* TODO: dtape should be adjusted to the speed... im lazy to do it */}
           <Speed
             value={properties.playbackRate!}
             onChange={handleChangeSpeed}
           />
-          <Rounded
+          {/* all useless */}
+          {/* <Rounded
             onChange={(v: number) => onChangeBorderRadius(v)}
             value={properties.details.borderRadius as number}
           />
@@ -211,7 +215,7 @@ const BasicVideo = ({ trackItem }: { trackItem: ITrackItem & IVideo }) => {
           <Opacity
             onChange={(v: number) => handleChangeOpacity(v)}
             value={properties.details.opacity!}
-          />
+          /> */}
         </div>
       </ScrollArea>
     </div>

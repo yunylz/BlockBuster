@@ -3,7 +3,7 @@ import { Texts } from "./texts";
 import { Uploads } from "./uploads";
 import { Audios } from "./audios";
 import { Config } from "./config";
-import { Images } from "./images";
+import { Tapes } from "./tapes";
 import { Blocks } from "./blocks";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -49,8 +49,8 @@ const ActiveMenuItem = () => {
     return <Audios />;
   }
 
-  if (activeMenuItem === "images") {
-    return <Images />;
+  if (activeMenuItem === "tapes") {
+    return <Tapes />;
   }
   if (activeMenuItem === "uploads") {
     return <Uploads />;

@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { dispatch } from "@designcombo/events";
 import { ADD_VIDEO } from "@designcombo/state";
-import { generateId } from "@designcombo/timeline";
+import { generateId, timeMsToUnits } from "@designcombo/timeline";
 import { Icons } from "@/components/shared/icons";
 import { Search, FolderOpen, Loader2, Check } from "lucide-react";
 import React, { useState, useMemo, useRef, useEffect } from "react";
@@ -13,6 +13,7 @@ import { parseBlocks } from "@/lib/blocks";
 import useAssetStore from "@/store/assets";
 import { useProjectStore } from "@/store/project";
 import { Block } from "@/interfaces/assets";
+import { presets } from "../player/animated";
 
 
 
@@ -121,6 +122,22 @@ export const Blocks = () => {
           title: block.blockName,
         },
         metadata: block,
+        animations: {
+          in: {
+            name: "fadeIn",
+            composition: [{
+              ...presets.fadeIn,
+              durationInFrames: timeMsToUnits(0.7)
+            }]
+          },
+          out: {
+            name: "fadeOut",
+            composition: [{
+              ...presets.fadeOut,
+              durationInFrames: timeMsToUnits(0.7)
+            }]
+          }
+        }
       },
       options: {
         resourceId: "main",
