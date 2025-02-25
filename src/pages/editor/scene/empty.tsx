@@ -36,7 +36,7 @@ const SceneEmpty = () => {
       ref={containerRef}
       className="relative z-50 h-full w-full flex-1 bg-zinc-900"
     >
-      <Droppable
+      {/* <Droppable
         maxFileCount={4}
         maxSize={4 * 1024 * 1024}
         disabled={false}
@@ -67,7 +67,7 @@ const SceneEmpty = () => {
             </div>
           </div>
         </DroppableArea>
-      </Droppable>
+      </Droppable> */}
     </div>
   );
 };
