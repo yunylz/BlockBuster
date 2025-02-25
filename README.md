@@ -1,7 +1,8 @@
 # Blockbuster 🎵
 A powerful tool for creating mashups using a block-based approach.
 
-🌐 **Project Website:** [blockbuster.projectanka.com](https://blockbuster.projectanka.com)
+🌐 **Project Website:** [blockbuster.projectanka.com](https://blockbuster.projectanka.com)  
+🚧 **Beta Release** – The project is currently in beta, so bugs and issues should be expected. If you encounter any, please report them here: [GitHub Issues](https://github.com/yunylz/BlockBuster/issues).
 
 ## Overview
 Blockbuster enables you to craft seamless dance mashups by arranging audio blocks on a timeline. Import your music, organize blocks, and perfect your mixes with an intuitive and efficient interface.
