@@ -1,46 +1,54 @@
-<p align="center">
-  <a href="https://github.com/designcombo/react-video-editor">
-    <img width="150px" height="150px" src="https://cdn.designcombo.dev/logo-white.png"/>
-  </a>
-</p>
-<h1 align="center">React Video Editor</h1>
+# Blockbuster 🎵
+A powerful tool for creating mashups using a block-based approach.
 
-<div align="center">
-  
-Video Editor application using React and TypeScript.
+🌐 **Project Website:** [blockbuster.projectanka.com](https://blockbuster.projectanka.com)
 
-<p align="center">
-    <a href="https://combo.sh/">Combo</a>
-    ·  
-    <a href="https://discord.gg/jrZs3wZyM5">Discord</a>
-    ·  
-    <a href="https://github.com/designcombo/react-video-editor">X</a>
-</p>
-</div>
+## Overview
+Blockbuster enables you to craft seamless dance mashups by arranging audio blocks on a timeline. Import your music, organize blocks, and perfect your mixes with an intuitive and efficient interface.
 
-[![](https://cdn.designcombo.dev/editor-preview.png)](https://github.com/designcombo/react-video-editor)
+## Features
+- 🎛️ **Block-Based Editing** – Load and arrange blocks on a timeline to create your mashup effortlessly.
+- 🎵 **Music Import** – Import your own music files and generate custom blocks.
+- ⏳ **Timeline Interface** – Gain precise control over timing and arrangement.
+- 📤 **Multiple Export Formats** – Export your mashups in various formats:
+  - **DTape** – Standard format for 2016+ mashups.
+  - **MusicTrack** – Auto-beat generated tracks tailored for your mashup.
+  - **Sequence** – Generate colorful backgrounds and customize their appearance.
+  - **TPL** *(Coming Soon)* – Template tape for 2014-2015 users who prefer official block files.
 
-## ✨ Features
+## Getting Started 🚀
+### Prerequisites
+Ensure you have the following installed:
+- Node.js (v14+)
 
-- 🎬 Timeline Editing: Arrange and trim media on a visual timeline.
-- 🌟 Effects and Transitions: Apply visual effects, filters, and transitions.
-- 🔀 Multi-track Support: Edit multiple video and audio tracks simultaneously.
-- 📤 Export Options: Save videos in various resolutions and formats.
-- 👀 Real-time Preview: See immediate previews of edits.
-
-## ⌨️ Development
-
-Clone locally:
-
+### Installation
+Clone the repository and install dependencies:
 ```bash
-git clone git@github.com:designcombo/react-video-editor.git
-cd react-video-editor
-pnpm install
-pnpm dev
+git clone https://github.com/yunylz/blockbuster.git
+cd blockbuster
+npm install
 ```
 
-Open your browser and visit http://localhost:5173 , see more at [Development](https://github.com/designcombo/react-video-editor/react-video-editor).
+### Running Blockbuster
+Start the development server:
+```bash
+npm run dev
+```
+Follow the on-screen instructions to begin creating your mashups.
 
-## 📝 License
+## How to Import Blocks 🎼
+To add blocks, select the block's map folder (must be deserialized).
 
-Copyright © 2025 [DesignCombo](https://combo.sh/).
+## Export Options 📦
+Blockbuster supports exporting your creations in multiple formats:
+- **DTape** – Standard format for 2016+ mashups.
+- **MusicTrack** – Auto-beat generated music tracks for enhanced mashups.
+- **Sequence** – Customize colorful backgrounds for visual appeal.
+- **TPL** *(Coming Soon)* – Template tape for 2014-2015 and beyond, designed for official block files.
+
+## Contributing 🤝
+We welcome contributions! If you'd like to improve Blockbuster, feel free to submit a Pull Request.
+
+## License 📜
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+
