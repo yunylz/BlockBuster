@@ -15,8 +15,6 @@ import { useProjectStore } from "@/store/project";
 import { Block } from "@/interfaces/assets";
 import { presets } from "../player/animated";
 
-
-
 const EmptyBlockState = () => (
   <div className="flex flex-col items-center justify-center h-full py-8 px-4 text-center">
     <div className="rounded-full p-6 mb-4 bg-zinc-900">
@@ -32,6 +30,7 @@ export const Blocks = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [uploadState, setUploadState] = useState<'idle' | 'uploading' | 'success'>('idle');
   const inputRef = useRef<HTMLInputElement>(null);
+  const [showInfo, setShowInfo] = useState(false);
   
   // Use asset store
   const { blocks: storeBlocks, setBlocks: setStoreBlocks } = useAssetStore();
@@ -56,17 +55,19 @@ export const Blocks = () => {
     try {
       setUploadState('uploading');
 
-      // Get root folders
+      // Get all files from the selection
       const entries = Array.from(e.target.files);
+      
+      // Extract unique root folder names from file paths
       const rootFolders = entries
-        .filter(file => {
+        .map(file => {
           const pathParts = file.webkitRelativePath.split('/');
-          return pathParts.length === 2; // Only direct children of selected folder
+          return pathParts.length > 1 ? pathParts[0] : null;
         })
-        .map(file => file.webkitRelativePath.split('/')[0])
+        .filter((folder): folder is string => folder !== null)
         .filter((value, index, self) => self.indexOf(value) === index); // Unique folders
 
-      // Create FileSystemDirectoryHandle-like objects for parseBlocks
+      // Process each root folder
       const folderHandles = rootFolders.map(folderName => {
         const folderFiles = entries.filter(file =>
           file.webkitRelativePath.startsWith(`${folderName}/`)
@@ -75,16 +76,23 @@ export const Blocks = () => {
         return {
           name: folderName,
           getDirectoryHandle: async (subFolder: string) => {
-            const subFolderFiles = folderFiles.filter(file =>
-              file.webkitRelativePath.startsWith(`${folderName}/${subFolder}/`)
-            );
+            const subFolderPath = `${folderName}/${subFolder}`;
+            const subFolderFiles = folderFiles.filter(file => {
+              const pathParts = file.webkitRelativePath.split('/');
+              return pathParts.length > 2 && 
+                     pathParts[0] === folderName && 
+                     pathParts[1] === subFolder;
+            });
 
             return {
               getFileHandle: async (fileName: string) => {
-                const file = subFolderFiles.find(f =>
-                  f.webkitRelativePath.endsWith(`/${fileName}`)
-                );
-                if (!file) throw new Error(`File ${fileName} not found`);
+                const file = subFolderFiles.find(f => {
+                  const pathParts = f.webkitRelativePath.split('/');
+                  return pathParts[pathParts.length - 1] === fileName;
+                });
+                
+                if (!file) throw new Error(`File ${fileName} not found in ${subFolderPath}`);
+                
                 return {
                   getFile: async () => file
                 };
@@ -94,6 +102,7 @@ export const Blocks = () => {
         };
       });
 
+      // Parse blocks using the folder handles
       const newBlocks = await parseBlocks(folderHandles);
     
       // Update both local state and store
@@ -205,6 +214,22 @@ export const Blocks = () => {
           disabled={uploadState !== 'idle'}
         >
           {renderUploadButtonContent()}
+        </Button>
+        
+        {showInfo && (
+          <div className="text-xs text-zinc-400 px-2">
+            <p>Note: Chrome and Edge on Windows may only allow selecting one folder at a time. 
+               For multiple folders, upload them one by one.</p>
+          </div>
+        )}
+        
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="text-xs text-zinc-500 w-full"
+          onClick={() => setShowInfo(!showInfo)}
+        >
+          {showInfo ? "Hide browser info" : "Having trouble with folder selection?"}
         </Button>
       </div>
       <ScrollArea>
