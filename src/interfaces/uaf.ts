@@ -1,4 +1,4 @@
-import { MotionClip, PictogramClip } from "./uaf/dtape";
+import { MotionClip, PictogramClip, TapeReferenceClip } from "./uaf/tape";
 
 export interface ActorTemplate {
     __class: "Actor_Template";
@@ -13,7 +13,7 @@ export interface ActorTemplate {
 
 export interface Tape {
     __class: "Tape";
-    Clips: (PictogramClip | MotionClip)[];
+    Clips: (PictogramClip | MotionClip | TapeReferenceClip)[];
     TapeClock: number;
     TapeBarCount: number;
     FreeResourcesAfterPlay: number;

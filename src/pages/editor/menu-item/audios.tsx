@@ -12,6 +12,7 @@ import useAssetStore from "@/store/assets";
 import { useProjectStore } from "@/store/project";
 import useStore from "@/pages/editor/store/use-store";
 import { generateBeats } from "@/lib/uaf";
+import { isBeatsNotSet, isBpmNotSet } from "@/lib/utils";
 
 const getAudioDuration = (audioUrl: string): Promise<number> => {
   return new Promise((resolve, reject) => {
@@ -47,6 +48,8 @@ export const Audios = () => {
   const [uploadState, setUploadState] = useState<'idle' | 'uploading' | 'success'>('idle');
   const inputFileRef = useRef<HTMLInputElement>(null);
 
+  const projectStore = useProjectStore();
+
   // Get editor store
   const store = useStore();
   const hasAudioTrack = store.tracks.some((track: { type: string }) => track.type === "audio");
@@ -62,6 +65,9 @@ export const Audios = () => {
   }, [audios, searchQuery]);
 
   const handleAddAudio = async (src: string) => {
+    if (isBpmNotSet(projectStore)) return alert("Please set the BPM from settings before proceeding.");
+    // audio adding cant ask to add audios?
+    //if (isBeatsNotSet(projectStore)) return alert("To use tracks, an audio must be added to the timeline so that beats can be generated. Please add an audio before proceeding.");
     if (hasAudioTrack) {
       alert('An audio file has already been added to the timeline');
       return;

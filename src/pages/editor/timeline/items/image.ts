@@ -24,7 +24,7 @@ class Image extends ImageBase {
     ctx.fillStyle = "#f4f4f5";
     ctx.textAlign = "left";
     ctx.clip();
-    ctx.fillText("Image", 36, 12);
+    ctx.fillText("Tape", 36, 12);
 
     ctx.translate(8, 1);
 

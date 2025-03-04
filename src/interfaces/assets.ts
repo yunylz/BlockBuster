@@ -10,6 +10,12 @@ export interface Block {
     endTime: number;
 }
 
+export interface TapeClip {
+    tapeName: string;
+    startTime: number;
+    endTime: number;
+}
+
 export interface BeatOptions {
     bpm: number;
     songLength: number;

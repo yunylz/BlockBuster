@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { exportDtape, exportMusicTrack } from "@/lib/uaf";
+import { exportDtape, exportMusicTrack, exportMainSequence } from "@/lib/uaf";
 import { isTracksEmpty } from "@/lib/utils";
 import useStore from "@/pages/editor/store/use-store";
 
@@ -48,9 +48,9 @@ export default function Export() {
   const handleExportMainSequence = () => {
     if (isTracksEmpty(trackStore)) return doAlert();
     
-    const musicTrackData = exportMusicTrack(projectStore);
+    const mainSequenceData = exportMainSequence(trackStore, projectStore);
 
-    const blob = new Blob([JSON.stringify(musicTrackData)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(mainSequenceData)], { type: 'application/json' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
 

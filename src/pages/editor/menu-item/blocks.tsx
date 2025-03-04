@@ -14,6 +14,9 @@ import useAssetStore from "@/store/assets";
 import { useProjectStore } from "@/store/project";
 import { Block } from "@/interfaces/assets";
 import { presets } from "../player/animated";
+import { isBeatsNotSet, isBpmNotSet } from "@/lib/utils";
+
+
 
 const EmptyBlockState = () => (
   <div className="flex flex-col items-center justify-center h-full py-8 px-4 text-center">
@@ -30,11 +33,11 @@ export const Blocks = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [uploadState, setUploadState] = useState<'idle' | 'uploading' | 'success'>('idle');
   const inputRef = useRef<HTMLInputElement>(null);
-  const [showInfo, setShowInfo] = useState(false);
   
   // Use asset store
   const { blocks: storeBlocks, setBlocks: setStoreBlocks } = useAssetStore();
   const [blocks, setBlocks] = useState<Block[]>(storeBlocks);
+  const projectStore = useProjectStore();
 
   const filteredBlocks = useMemo(() => {
     const query = searchQuery.toLowerCase();
@@ -55,19 +58,17 @@ export const Blocks = () => {
     try {
       setUploadState('uploading');
 
-      // Get all files from the selection
+      // Get root folders
       const entries = Array.from(e.target.files);
-      
-      // Extract unique root folder names from file paths
       const rootFolders = entries
-        .map(file => {
+        .filter(file => {
           const pathParts = file.webkitRelativePath.split('/');
-          return pathParts.length > 1 ? pathParts[0] : null;
+          return pathParts.length === 2; // Only direct children of selected folder
         })
-        .filter((folder): folder is string => folder !== null)
+        .map(file => file.webkitRelativePath.split('/')[0])
         .filter((value, index, self) => self.indexOf(value) === index); // Unique folders
 
-      // Process each root folder
+      // Create FileSystemDirectoryHandle-like objects for parseBlocks
       const folderHandles = rootFolders.map(folderName => {
         const folderFiles = entries.filter(file =>
           file.webkitRelativePath.startsWith(`${folderName}/`)
@@ -76,23 +77,16 @@ export const Blocks = () => {
         return {
           name: folderName,
           getDirectoryHandle: async (subFolder: string) => {
-            const subFolderPath = `${folderName}/${subFolder}`;
-            const subFolderFiles = folderFiles.filter(file => {
-              const pathParts = file.webkitRelativePath.split('/');
-              return pathParts.length > 2 && 
-                     pathParts[0] === folderName && 
-                     pathParts[1] === subFolder;
-            });
+            const subFolderFiles = folderFiles.filter(file =>
+              file.webkitRelativePath.startsWith(`${folderName}/${subFolder}/`)
+            );
 
             return {
               getFileHandle: async (fileName: string) => {
-                const file = subFolderFiles.find(f => {
-                  const pathParts = f.webkitRelativePath.split('/');
-                  return pathParts[pathParts.length - 1] === fileName;
-                });
-                
-                if (!file) throw new Error(`File ${fileName} not found in ${subFolderPath}`);
-                
+                const file = subFolderFiles.find(f =>
+                  f.webkitRelativePath.endsWith(`/${fileName}`)
+                );
+                if (!file) throw new Error(`File ${fileName} not found`);
                 return {
                   getFile: async () => file
                 };
@@ -102,7 +96,6 @@ export const Blocks = () => {
         };
       });
 
-      // Parse blocks using the folder handles
       const newBlocks = await parseBlocks(folderHandles);
     
       // Update both local state and store
@@ -123,6 +116,8 @@ export const Blocks = () => {
   };
 
   const handleAddBlock = (block: Block) => {
+    if (isBpmNotSet(projectStore)) return alert("Please set the BPM from settings before proceeding.");
+    if (isBeatsNotSet(projectStore)) return alert("To use tracks, an audio must be added to the timeline so that beats can be generated. Please add an audio before proceeding.");
     dispatch(ADD_VIDEO, {
       payload: {
         id: generateId(),
@@ -215,22 +210,6 @@ export const Blocks = () => {
         >
           {renderUploadButtonContent()}
         </Button>
-        
-        {showInfo && (
-          <div className="text-xs text-zinc-400 px-2">
-            <p>Note: Chrome and Edge on Windows may only allow selecting one folder at a time. 
-               For multiple folders, upload them one by one.</p>
-          </div>
-        )}
-        
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="text-xs text-zinc-500 w-full"
-          onClick={() => setShowInfo(!showInfo)}
-        >
-          {showInfo ? "Hide browser info" : "Having trouble with folder selection?"}
-        </Button>
       </div>
       <ScrollArea>
         <div className="flex flex-col px-2">
@@ -243,6 +222,7 @@ export const Blocks = () => {
                   block={block}
                   shouldDisplayPreview={!isDraggingOverTimeline}
                   onSelect={handleAddBlock}
+                  projectBpm={projectStore.bpm}
                 />
               ))
           ) : (
@@ -258,12 +238,13 @@ const BlockItem = ({
   block,
   shouldDisplayPreview,
   onSelect,
+  projectBpm,
 }: {
   block: Block;
   shouldDisplayPreview: boolean;
   onSelect: (block: Block) => void;
+  projectBpm: number;
 }) => {
-  const projectBpm = useProjectStore((state) => state.bpm);
   return (
     <Draggable
       data={{

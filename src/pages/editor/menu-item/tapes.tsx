@@ -7,6 +7,8 @@ import React, { useState } from "react";
 import { useIsDraggingOverTimeline } from "../hooks/is-dragging-over-timeline";
 import { ADD_ITEMS } from "@designcombo/state";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { isBeatsNotSet, isBpmNotSet } from "@/lib/utils";
+import { useProjectStore } from "@/store/project";
 
 type CategoryKey = 'backgrounds';
 
@@ -56,8 +58,20 @@ export const Tapes = () => {
     backgrounds: true
   });
 
+  const projectStore = useProjectStore();
+
   const handleAddTape = (payload: Partial<IImage>) => {
+    if (isBpmNotSet(projectStore)) return alert("Please set the BPM from settings before proceeding.");
+    if (isBeatsNotSet(projectStore)) return alert("To use tracks, an audio must be added to the timeline so that beats can be generated. Please add an audio before proceeding.");
     const id = generateId();
+    
+    // Extract the filename from the src path
+    const src = payload.details?.src || '';
+    const filename = src.split('/').pop() || '';
+    
+    // Remove the file extension if needed
+    const name = filename.replace(/\.[^/.]+$/, '');
+    
     dispatch(ADD_ITEMS, {
       payload: {
         trackItems: [
@@ -71,7 +85,9 @@ export const Tapes = () => {
             details: {
               src: payload.details?.src,
             },
-            metadata: {},
+            metadata: {
+              tapeName: name, // Add the extracted name to metadata
+            },
           },
         ],
       },

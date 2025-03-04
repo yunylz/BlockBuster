@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { v4 } from "uuid";
 
-import { BeatOptions, BeatResult, Block } from "@/interfaces/assets";
-import { MusicTrack, Tape, BlockReplacements, BlockDescriptor, BlockFlowTemplate, ActorTemplate, MusicTrackComponent } from "@/interfaces/uaf";
+import { BeatOptions, BeatResult, Block, TapeClip } from "@/interfaces/assets";
+import { MusicTrack, BlockReplacements, BlockDescriptor, BlockFlowTemplate, ActorTemplate, MusicTrackComponent, Tape } from "@/interfaces/uaf";
 
 import useStore from "@/pages/editor/store/use-store";
 
@@ -144,4 +144,107 @@ export function exportMusicTrack(projectStore: ProjectState) {
   };
 
   return musicTrack;
+};
+
+export function exportMainSequence(trackStore: ReturnType<typeof useStore>, projectStore: ProjectState) {
+  const {
+    tracks,
+    // trackItemIds,
+    trackItemsMap,
+    // trackItemDetailsMap,
+    // transitionsMap,
+    // transitionIds,
+    // fps,
+  } = trackStore;
+  const { mapName, beats, bpm } = projectStore;
+  const time = new UAFTime(beats, true);
+  console.log(mapName, beats, bpm)
+
+  const tapes = tracks
+    .filter((track: { type: string }) => track.type === "image")
+    .flatMap((track: { items: unknown[] }) => track.items)
+    .map((itemId: string | number) => {
+      const item = trackItemsMap[itemId];
+      console.log(item)
+      return {
+        tapeName: item.metadata.tapeName,
+        startTime: item.display.from,
+        endTime: item.display.to
+      };
+    });
+
+  console.log("tapes", tapes)
+
+  const uuids: Record<string, string> = {};
+  const tape: Tape = {
+      __class: "Tape",
+      Clips: [],
+      TapeClock: 0,
+      TapeBarCount: 1,
+      FreeResourcesAfterPlay: 0,
+      MapName: mapName
+  };
+
+  const colorTrackId = Math.floor(Math.random() * 9000000000) + 1000000000;
+  const duoTrackId = Math.floor(Math.random() * 9000000000) + 1000000000;
+  const uvLeftTrackId = Math.floor(Math.random() * 9000000000) + 1000000000;
+  const uvRightTrackId = Math.floor(Math.random() * 9000000000) + 1000000000;
+
+  for (let i = 0; i < tapes.length; i++) {
+    const tapeData: TapeClip = tapes[i];
+
+    const tapeName = tapeData.tapeName;
+    const startTime = tapeData.startTime;
+    const endTime = tapeData.endTime;
+
+    // Calculate time values for current block
+    const { startTime: tapeStartTime, duration: tapeDuration } = time.makeTime(startTime, endTime);
+
+    tape.Clips = [
+      ...tape.Clips,
+      {
+        "__class": "TapeReferenceClip",
+        "Id": Math.floor(Math.random() * 900000000) + 100000000,
+        "TrackId": colorTrackId,
+        "IsActive": 1,
+        "StartTime": tapeStartTime,
+        "Duration": tapeDuration,
+        "Path": `world/maps/${mapName.toLowerCase()}/cinematics/tapereferences/color_${tapeName}.tape`,
+        "Loop": 0
+      },
+      {
+        "__class": "TapeReferenceClip",
+        "Id": Math.floor(Math.random() * 900000000) + 100000000,
+        "TrackId": duoTrackId,
+        "IsActive": 1,
+        "StartTime": tapeStartTime,
+        "Duration": tapeDuration,
+        "Path": `world/maps/${mapName.toLowerCase()}/cinematics/tapereferences/color_${tapeName}_duo.tape`,
+        "Loop": 0
+      },
+      {
+        "__class": "TapeReferenceClip",
+        "Id": Math.floor(Math.random() * 900000000) + 100000000,
+        "TrackId": uvLeftTrackId,
+        "IsActive": 1,
+        "StartTime": tapeStartTime,
+        "Duration": tapeDuration,
+        "Path": `world/maps/${mapName.toLowerCase()}/cinematics/tapereferences/uv_left.tape`,
+        "Loop": 0
+      },
+      {
+        "__class": "TapeReferenceClip",
+        "Id": Math.floor(Math.random() * 900000000) + 100000000,
+        "TrackId": uvRightTrackId,
+        "IsActive": 1,
+        "StartTime": tapeStartTime,
+        "Duration": tapeDuration,
+        "Path": `world/maps/${mapName.toLowerCase()}/cinematics/tapereferences/uv_right.tape`,
+        "Loop": 0
+      }
+    ]
+  };
+
+  console.log("tape", JSON.stringify(tape));
+  return tape;
 };

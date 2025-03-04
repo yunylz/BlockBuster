@@ -3,7 +3,7 @@ export interface MotionPlatformSpecific {
     ScoreScale: number;
     ScoreSmoothing: number;
     ScoringMode: number;
-}
+};
 
 export interface MotionClip {
     __class: "MotionClip";
@@ -22,7 +22,7 @@ export interface MotionClip {
         ORBIS: MotionPlatformSpecific;
         DURANGO: MotionPlatformSpecific;
     };
-}
+};
 
 export interface PictogramClip {
     __class: "PictogramClip";
@@ -35,4 +35,15 @@ export interface PictogramClip {
     MontagePath: string;
     AtlIndex: number;
     CoachCount: number;
-}
+};
+
+export interface TapeReferenceClip {
+    __class: string;
+    Id: number;
+    TrackId: number;
+    IsActive: number;
+    StartTime: number;
+    Duration: number;
+    Path: string;
+    Loop: number;
+};

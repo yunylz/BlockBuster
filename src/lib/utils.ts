@@ -1,4 +1,5 @@
 import useStore from "@/pages/editor/store/use-store";
+import { ProjectState } from "@/store/project";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -36,5 +37,15 @@ export function isTracksEmpty(trackStore: ReturnType<typeof useStore>) {
   } = trackStore;
 
   if (tracks.length == 0 || trackItemsMap.length == 0) return true
+  else return false
+};
+
+export function isBpmNotSet(projectStore: ProjectState) { 
+  if (projectStore.bpm == 0) return true
+  else return false
+};
+
+export function isBeatsNotSet(projectStore: ProjectState) { 
+  if (projectStore.beats.length == 0) return true
   else return false
 };
