@@ -30,6 +30,7 @@ export const Blocks = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [uploadState, setUploadState] = useState<'idle' | 'uploading' | 'success'>('idle');
   const [isDragOver, setIsDragOver] = useState(false);
+  const [showUploadArea, setShowUploadArea] = useState(false);
   const dropZoneRef = useRef<HTMLDivElement>(null);
   
   // Use asset store
@@ -227,6 +228,10 @@ export const Blocks = () => {
     });
   };
 
+  const toggleUploadArea = () => {
+    setShowUploadArea(!showUploadArea);
+  };
+
   const renderUploadStatus = () => {
     switch (uploadState) {
       case 'uploading':
@@ -250,8 +255,17 @@ export const Blocks = () => {
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="text-text-primary flex h-12 flex-none items-center px-4 text-sm font-medium">
-        Blocks
+      <div className="text-text-primary flex h-12 flex-none items-center justify-between px-4 pr-10 text-sm font-medium">
+        <span>Blocks</span>
+        <button 
+          onClick={toggleUploadArea}
+          className={`flex items-center justify-center p-1.5 rounded-md transition-colors ${
+            showUploadArea ? 'bg-blue-500/20 text-blue-400' : 'hover:bg-zinc-800 text-zinc-400 hover:text-zinc-300'
+          }`}
+          title={showUploadArea ? "Hide upload area" : "Show upload area"}
+        >
+          <Upload className="h-4 w-4" />
+        </button>
       </div>
       <div className="px-4 pb-2 space-y-2">
         <div className="relative">
@@ -264,29 +278,33 @@ export const Blocks = () => {
           />
         </div>
         
-        <div
-          ref={dropZoneRef}
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          className={`border-2 border-dashed rounded-md flex flex-col items-center justify-center p-4 transition-colors ${
-            isDragOver 
-              ? 'border-blue-500 bg-blue-500/10' 
-              : 'border-zinc-700 hover:border-zinc-500'
-          }`}
-        >
-          <Upload className={`h-6 w-6 mb-2 ${isDragOver ? 'text-blue-400' : 'text-zinc-400'}`} />
-          <p className="text-sm text-center">
-            {isDragOver 
-              ? 'Drop folders here' 
-              : 'Drag and drop folders here'}
-          </p>
-          <p className="text-xs text-zinc-500 text-center mt-1">
-            Only folders containing block files will be processed
-          </p>
-        </div>
-        
-        {renderUploadStatus()}
+        {showUploadArea && (
+          <>
+            <div
+              ref={dropZoneRef}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              className={`border-2 border-dashed rounded-md flex flex-col items-center justify-center p-4 transition-colors ${
+                isDragOver 
+                  ? 'border-blue-500 bg-blue-500/10' 
+                  : 'border-zinc-700 hover:border-zinc-500'
+              }`}
+            >
+              <Upload className={`h-6 w-6 mb-2 ${isDragOver ? 'text-blue-400' : 'text-zinc-400'}`} />
+              <p className="text-sm text-center">
+                {isDragOver 
+                  ? 'Drop folders here' 
+                  : 'Drag and drop folders here'}
+              </p>
+              <p className="text-xs text-zinc-500 text-center mt-1">
+                Only folders containing block files will be processed
+              </p>
+            </div>
+            
+            {renderUploadStatus()}
+          </>
+        )}
       </div>
       
       <ScrollArea>
