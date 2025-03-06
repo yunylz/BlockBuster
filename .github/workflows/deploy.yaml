@@ -21,7 +21,7 @@ jobs:
       - name: Build
         run: npm run build
         
-      - name: Deploy to VPS
+      - name: Deploy to VPS using SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           server: ${{ secrets.HOST }}
@@ -29,3 +29,4 @@ jobs:
           ssh_private_key: ${{ secrets.SSH_KEY }}
           local_path: './dist/*'
           remote_path: '/var/www/blockbuster'
+          sftpArgs: '-o ServerAliveInterval=60'
