@@ -120,7 +120,7 @@ export function exportMusicTrack(projectStore: ProjectState) {
               markers: markers,
               sections: [],
               startBeat: 0,
-              endBeat: markers[markers.length] || 0,
+              endBeat: markers.length || 0,
               videoStartTime: 0,
               previewEntry: 0,
               previewLoopStart: 30,

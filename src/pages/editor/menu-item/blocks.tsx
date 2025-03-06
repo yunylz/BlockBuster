@@ -348,13 +348,6 @@ const BlockItem = ({
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  // Handle metadata loaded event to get video duration
-  const handleMetadataLoaded = () => {
-    if (previewVideoRef.current) {
-      setDuration(formatTime(previewVideoRef.current.duration));
-    }
-  };
-
   // Use a specific thumbnail creation approach using a video element
   useEffect(() => {
     // Create a video element to capture the thumbnail
@@ -380,7 +373,7 @@ const BlockItem = ({
         ref={itemRef}
         draggable={false}
         onClick={() => onSelect(block)}
-        onMouseEnter={() => setShowPreview(true)}
+        onMouseEnter={() => setShowPreview(false)}
         onMouseLeave={() => setShowPreview(false)}
         style={{
           display: "grid",
@@ -390,8 +383,7 @@ const BlockItem = ({
       >
         {/* Thumbnail container */}
         <div className="flex h-12 items-center justify-center bg-zinc-800 overflow-hidden">
-          {thumbnailError ? (
-            // Fallback icon if thumbnail fails
+
             <svg
               width="16"
               height="16"
@@ -407,17 +399,6 @@ const BlockItem = ({
               <rect x="2" y="14" width="8" height="8" rx="1" />
               <rect x="14" y="14" width="8" height="8" rx="1" />
             </svg>
-          ) : (
-            // Video element for thumbnail with explicit dimensions
-            <video
-              ref={videoRef}
-              src={block.videoPath}
-              className="min-w-full min-h-full object-cover"
-              muted
-              preload="metadata"
-              onError={() => setThumbnailError(true)}
-            />
-          )}
         </div>
 
         {/* Block info */}
@@ -453,7 +434,6 @@ const BlockItem = ({
               <span>{block.bpm} BPM</span>
             </div>
           )}
-          <span className="text-xs text-zinc-400">{duration}</span>
         </div>
 
         {/* Hover preview popup */}
@@ -478,14 +458,12 @@ const BlockItem = ({
                 autoPlay
                 loop
                 playsInline
-                onLoadedMetadata={handleMetadataLoaded}
               />
             </div>
             <div className="p-3">
               <div className="font-medium mb-1">{block.blockName}</div>
               <div className="flex justify-between text-xs text-zinc-400">
                 <span>{block.bpm} BPM</span>
-                <span>{duration}</span>
               </div>
             </div>
           </div>
