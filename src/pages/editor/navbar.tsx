@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { version } from '../../../package.json';
+
 import { useEffect, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -274,9 +276,10 @@ export default function Navbar() {
       >
         {/* Navbar start */}
         <div className="pointer-events-auto flex h-14 items-center gap-2">
-          <div className="bg-background h-12 flex items-center gap-2 px-3 rounded-md">
+          <div className="bg-background h-12 flex items-center gap-2 px-3 pr-7 rounded-md">
             <img src={logoDark} alt="logo" className="h-5 w-5" />
             <span className="font-medium text-sm">BlockBuster</span>
+            <span className="text-xs text-gray-500 ml-auto">v{version}</span>
           </div>
           <div className="flex h-12 items-center bg-background px-1.5">
             <DropdownMenu>
