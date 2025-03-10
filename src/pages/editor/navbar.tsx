@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { dispatch } from "@designcombo/events";
 import { HISTORY_UNDO, HISTORY_REDO, DESIGN_RESIZE, DESIGN_LOAD } from "@designcombo/state";
-import logoDark from "@/assets/logo-dark.png";
 import { Icons } from "@/components/shared/icons";
 import {
   Popover,
@@ -276,8 +275,8 @@ export default function Navbar() {
       >
         {/* Navbar start */}
         <div className="pointer-events-auto flex h-14 items-center gap-2">
-          <div className="bg-background h-12 flex items-center gap-2 px-3 pr-7 rounded-md">
-            <img src={logoDark} alt="logo" className="h-5 w-5" />
+          <div className="bg-background h-12 flex items-center gap-2 px-3 pr-8 rounded-md">
+            <img src="/assets/logo-dark.png" className="h-6 w-6" />
             <span className="font-medium text-sm">BlockBuster</span>
             <span className="text-xs text-gray-500 ml-auto">v{version}</span>
           </div>

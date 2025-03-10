@@ -33,20 +33,20 @@ const TAPE_CATEGORIES: Record<CategoryKey, TapeCategory> = {
     title: "Backgrounds",
     tapes: [
       {
-        preview: "/src/assets/bkgs/blue.png",
-        details: { src: "/src/assets/bkgs/blue.png" }
+        preview: "/assets/bkgs/blue.png",
+        details: { src: "/assets/bkgs/blue.png" }
       },
       {
-        preview: "/src/assets/bkgs/green.png",
-        details: { src: "/src/assets/bkgs/green.png" }
+        preview: "/assets/bkgs/green.png",
+        details: { src: "/assets/bkgs/green.png" }
       },
       {
-        preview: "/src/assets/bkgs/purple.png",
-        details: { src: "/src/assets/bkgs/purple.png" }
+        preview: "/assets/bkgs/purple.png",
+        details: { src: "/assets/bkgs/purple.png" }
       },
       {
-        preview: "/src/assets/bkgs/orange.png",
-        details: { src: "/src/assets/bkgs/orange.png" }
+        preview: "/assets/bkgs/orange.png",
+        details: { src: "/assets/bkgs/orange.png" }
       }
     ]
   }
